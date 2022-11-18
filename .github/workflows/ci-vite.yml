@@ -10,12 +10,12 @@ on:
         description: Run type-check job
         type: boolean
         default: true
-      unit-test:
-        description: Run unit-test job
+      unit-tests:
+        description: Run unit-tests job
         type: boolean
         default: true
-      e2e-test:
-        description: Run e2e-test job
+      e2e-tests:
+        description: Run e2e-tests job
         type: boolean
         default: true
       autofix:
@@ -23,7 +23,7 @@ on:
         type: boolean
         default: true
       record-e2e:
-        description: Record e2e tests. Must pass CYPRESS_PROJECT_ID and CYPRESS_RECORD_KEY.
+        description: Record e2e tests. Must pass CYPRESS_PROJECT_ID and CYPRESS_RECORD_KEY secrets
         type: boolean
         default: false
     secrets:
