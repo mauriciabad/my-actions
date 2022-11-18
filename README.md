@@ -3,9 +3,10 @@
 This repository (`mauriciabad/my-actions`) contains reusable GitHub Actions for my projects.
 
 ## Sample workflows
-Sample workflows you can copy paste to yout repo.
+Sample workflows you can copy paste to your repo.
 
-- [auto-merge-dependabot](https://github.com/mauriciabad/my-actions/blob/main/.github/workflows/auto-merge-dependabot.yml)
+### Auto-merge dependabot PRs
+Just copy paste this code: [auto-merge-dependabot](https://github.com/mauriciabad/my-actions/blob/main/.github/workflows/auto-merge-dependabot.yml)
 
 ## Reusable workflows
 
