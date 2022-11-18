@@ -6,7 +6,9 @@ This repository (`mauriciabad/my-actions`) contains reusable GitHub Actions for 
 Sample workflows you can copy paste to your repo.
 
 ### Auto-merge dependabot PRs
-Just copy paste this code: [auto-merge-dependabot](https://github.com/mauriciabad/my-actions/blob/main/.github/workflows/auto-merge-dependabot.yml)
+1. Copy this code into a new workflow in your repository: [auto-merge-dependabot](https://github.com/mauriciabad/my-actions/blob/main/.github/workflows/auto-merge-dependabot.yml).
+1. [Create a Personal Access Token with `push` permission](https://github.com/ahmadnassri/action-dependabot-auto-merge#token-scope) and save it as a secret `PUSH_TOKEN` in the repository.
+
 
 ## Reusable workflows
 
