@@ -30,6 +30,7 @@ name: CI
 on: push
 jobs:
   ci:
+    name: CI
     uses: mauriciabad/my-actions/.github/workflows/ci-vite.yml@main
     with:
       record-e2e: false
