@@ -1,12 +1,43 @@
-# Sample CI for Vite & Vue.js 3 & Cypress & npm
-# It has jobs for: lint, type-check, unit-test, e2e-test
-# Copied from https://github.com/mauriciabad/my-actions/blob/main/.github/workflows/auto-merge-dependabot.yml
-
-name: CI
-on: push
+name: CI Vite
+on:
+  workflow_call:
+    inputs:
+      lint:
+        description: Run lint job
+        type: boolean
+        default: true
+      type-check:
+        description: Run type-check job
+        type: boolean
+        default: true
+      unit-test:
+        description: Run unit-test job
+        type: boolean
+        default: true
+      e2e-test:
+        description: Run e2e-test job
+        type: boolean
+        default: true
+      autofix:
+        description: Commit automatic fixes after lint
+        type: boolean
+        default: true
+      record-e2e:
+        description: Record e2e tests. Must pass CYPRESS_PROJECT_ID and CYPRESS_RECORD_KEY.
+        type: boolean
+        default: false
+    secrets:
+      GITHUB_TOKEN:
+        required: true
+      CYPRESS_PROJECT_ID:
+        required: false
+      CYPRESS_RECORD_KEY:
+        required: false
+        
 jobs:
   lint:
     name: Lint
+    if: inputs.lint
     runs-on: ubuntu-latest
     steps:
       - name: ⚙️ Setup
@@ -16,6 +47,7 @@ jobs:
         run: npm run lint
         
       - name: 🍾 Commit & Push changes
+        if: inputs.autofix
         uses: actions-js/push@master
         with:
           message: 'chore: Auto-fix some lint errors'
@@ -24,6 +56,7 @@ jobs:
 
   type-check:
     name: Type check
+    if: inputs.type-check
     runs-on: ubuntu-latest
     steps:
       - name: ⚙️ Setup
@@ -34,6 +67,7 @@ jobs:
 
   unit-tests:
     name: Unit tests
+    if: inputs.unit-tests
     needs: [lint, type-check]
     runs-on: ubuntu-latest
     steps:
@@ -45,6 +79,7 @@ jobs:
 
   e2e-tests:
     name: E2E tests
+    if: inputs.e2e-tests
     needs: [lint, type-check, unit-tests]
     runs-on: ubuntu-latest
     steps:
@@ -57,7 +92,7 @@ jobs:
       - name: 🤖 Run the tests
         uses: cypress-io/github-action@v4
         with:
-          # record: true
+          record: ${{ inputs.record-e2e }}
           browser: chrome
           build: npm run build
           start: 'serve dist -l 4173'
