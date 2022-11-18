@@ -47,6 +47,13 @@ Runs Lighthouse CI when all tests pass.
 1. Configure Lighthouse:
     1. Install the [Lighthouse CI GitHub App](https://github.com/apps/lighthouse-ci)
     1. Copy the token provided on the authorization confirmation page and [add it to your build environment](https://docs.github.com/en/free-pro-team@latest/actions/reference/environment-variables) as `LHCI_GITHUB_APP_TOKEN`.
+    1. Create a `lighthouserc.yaml` file on the project root with this contents:
+    ```yaml
+    ci:
+      preset: lighthouse:all
+      upload:
+        target: temporary-public-storage
+    ```
 
 ##### Options
 | Name | Type | Default | Description|
