@@ -129,7 +129,7 @@ jobs:
   lighthouse:
     name: Lighthouse
     if: inputs.lighthouse
-    needs: [build, unit-tests]
+    needs: [build, e2e-tests]
     runs-on: ubuntu-latest
     steps:
     - name: ⚙️ Setup
