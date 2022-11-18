@@ -18,6 +18,10 @@ on:
         description: Run e2e-tests job
         type: boolean
         default: true
+      lighthouse:
+        description: Run lighthouse job
+        type: boolean
+        default: false
       autofix:
         description: Commit automatic fixes after lint
         type: boolean
@@ -30,6 +34,8 @@ on:
       CYPRESS_PROJECT_ID:
         required: false
       CYPRESS_RECORD_KEY:
+        required: false
+      LHCI_GITHUB_APP_TOKEN:
         required: false
         
 jobs:
@@ -77,6 +83,7 @@ jobs:
 
   build:
     name: Build
+    if: inputs.e2e-tests || inputs.lighthouse
     needs: [lint, type-check]
     runs-on: ubuntu-latest
     steps:
@@ -118,3 +125,26 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+
+  lighthouse:
+    name: Lighthouse
+    if: inputs.lighthouse
+    needs: [build, unit-tests]
+    runs-on: ubuntu-latest
+    steps:
+    - name: ⚙️ Setup
+      uses: mauriciabad/my-actions/setup-npm@main
+
+    - name: 🚚 Get the build
+      uses: actions/download-artifact@v3
+      with:
+        name: dist
+        path: dist
+
+    - name: 🎁 Install Lighthouse
+      run: npm install -g @lhci/cli
+
+    - name: 🔎 Run Lighthouse
+      run: lhci autorun
+      env:
+        LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
