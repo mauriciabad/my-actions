@@ -75,10 +75,23 @@ jobs:
       - name: 🧪 Test
         run: npm run test:unit
 
+  build:
+    name: Build
+    needs: [lint, type-check]
+    runs-on: ubuntu-latest
+    steps:
+      - name: 👷🏽‍♂️ Build the site
+        run: npm run build
+      - name: 💾 Store the build
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: dist
+
   e2e-tests:
     name: E2E tests
     if: inputs.e2e-tests
-    needs: [lint, type-check, unit-tests]
+    needs: [build, unit-tests]
     runs-on: ubuntu-latest
     steps:
       - name: ⚙️ Setup
@@ -87,12 +100,17 @@ jobs:
       - name: ⚙️ Install serve
         run: npm install -g serve
 
+      - name: 🚚 Get the build
+        uses: actions/download-artifact@v3
+        with:
+          name: dist
+          path: dist
+
       - name: 🤖 Run the tests
         uses: cypress-io/github-action@v4
         with:
           record: ${{ inputs.record-e2e }}
           browser: chrome
-          build: npm run build
           start: 'serve dist -l 4173'
           wait-on: 'http://localhost:4173'
           wait-on-timeout: 30
