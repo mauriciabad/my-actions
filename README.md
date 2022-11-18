@@ -5,8 +5,52 @@ This repository (`mauriciabad/my-actions`) contains reusable GitHub Actions for 
 ## Sample workflows
 Sample workflows you can copy paste to yout repo.
 
-- [ci-vite](https://github.com/mauriciabad/my-actions/blob/main/.github/workflows/ci-vite.yml)
 - [auto-merge-dependabot](https://github.com/mauriciabad/my-actions/blob/main/.github/workflows/auto-merge-dependabot.yml)
+
+## Reusable workflows
+
+### CI Vite
+Complete set of jobs for a CI of a project using Vite, Vue.js 3, Cypress, and npm.
+
+It has jobs for: `lint`, `type-check`, `unit-test`, and `e2e-test`.
+
+After linting, it commits the autofixed changes to the same branch.
+
+After the E2E tests, it can send the records to <https://cypress.io>.
+
+#### Usage
+1. Define the secrets `CYPRESS_PROJECT_ID` and `CYPRESS_RECORD_KEY` in your repository configuration.
+2. Create this gh action workflow file:
+
+```yml
+# .github/workflows/ci.yml
+
+name: CI
+on: push
+jobs:
+  ci:
+    uses: mauriciabad/my-actions/.github/workflows/ci-vite.yml@main
+    with:
+      record-e2e: false
+    secrets:
+      CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
+      CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+```
+
+##### Options
+| Name | Type | Default | Description|
+|:---|:---:|:----:|:---|
+| `autofix` | boolean | true | Commit automatic fixes after lint |
+| `record-e2e` | boolean | false | Record e2e tests. Must pass `CYPRESS_PROJECT_ID` and `CYPRESS_RECORD_KEY` secrets |
+| `lint` | boolean | true | Run lint job |
+| `type-check` | boolean | true | Run type-check job |
+| `unit-test` | boolean | true | Run unit-test job |
+| `e2e-test` | boolean | true | Run e2e-test job |
+##### Secrets
+| Name | Description|
+|:---|:---|
+| `CYPRESS_PROJECT_ID` | Cypress project id. [More detais here](https://docs.cypress.io/guides/cloud/projects#Project-ID). Typically this value is saved in the `cypress.json` file.  |
+| `CYPRESS_RECORD_KEY` | Cypress record key. [More detais here](https://docs.cypress.io/guides/cloud/projects#Record-key) |
 
 ## Actions
 List of avilable actions.
