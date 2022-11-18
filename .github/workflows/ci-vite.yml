@@ -87,8 +87,12 @@ jobs:
     needs: [lint, type-check]
     runs-on: ubuntu-latest
     steps:
+      - name: ⚙️ Setup
+        uses: mauriciabad/my-actions/setup-npm@main
+
       - name: 👷🏽‍♂️ Build the site
         run: npm run build
+
       - name: 💾 Store the build
         uses: actions/upload-artifact@v3
         with:
