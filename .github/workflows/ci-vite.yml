@@ -27,8 +27,6 @@ on:
         type: boolean
         default: false
     secrets:
-      GITHUB_TOKEN:
-        required: true
       CYPRESS_PROJECT_ID:
         required: false
       CYPRESS_RECORD_KEY:
