@@ -19,25 +19,32 @@ After linting, it commits the autofixed changes to the same branch.
 
 After the E2E tests, it can send the records to <https://cypress.io>.
 
+Runs Lighthouse CI when all tests pass.
+
 #### Usage
-1. Define the secrets `CYPRESS_PROJECT_ID` and `CYPRESS_RECORD_KEY` in your repository configuration.
 2. Create this gh action workflow file:
+    ```yml
+    # .github/workflows/ci.yml
 
-```yml
-# .github/workflows/ci.yml
-
-name: CI
-on: push
-jobs:
-  ci:
     name: CI
-    uses: mauriciabad/my-actions/.github/workflows/ci-vite.yml@main
-    with:
-      record-e2e: false
-    secrets:
-      CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
-      CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-```
+    on: push
+    jobs:
+      ci:
+        name: CI
+        uses: mauriciabad/my-actions/.github/workflows/ci-vite.yml@main
+        with:
+          record-e2e: false
+        secrets:
+          CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+    ```
+1. Configure Cypress: 
+    1. Define the secrets `CYPRESS_PROJECT_ID` and `CYPRESS_RECORD_KEY` in your repository configuration. `CYPRESS_PROJECT_ID` Can just be inlined without a secret, if you prefer so.
+    1. Set the option `record-e2e` to true if you want to send data to <https://cypress.io>.
+1. Configure Lighthouse:
+    1. Install the [Lighthouse CI GitHub App](https://github.com/apps/lighthouse-ci)
+    1. Copy the token provided on the authorization confirmation page and [add it to your build environment](https://docs.github.com/en/free-pro-team@latest/actions/reference/environment-variables) as `LHCI_GITHUB_APP_TOKEN`.
 
 ##### Options
 | Name | Type | Default | Description|
@@ -48,11 +55,13 @@ jobs:
 | `type-check` | boolean | true | Run type-check job |
 | `unit-test` | boolean | true | Run unit-test job |
 | `e2e-test` | boolean | true | Run e2e-test job |
+| `lighthouse` | boolean | true | Run lighthouse job |
 ##### Secrets
 | Name | Description|
 |:---|:---|
 | `CYPRESS_PROJECT_ID` | Cypress project id. [More detais here](https://docs.cypress.io/guides/cloud/projects#Project-ID). Typically this value is saved in the `cypress.json` file.  |
-| `CYPRESS_RECORD_KEY` | Cypress record key. [More detais here](https://docs.cypress.io/guides/cloud/projects#Record-key) |
+| `CYPRESS_RECORD_KEY` | Cypress record key. [More detais here](https://docs.cypress.io/guides/cloud/projects#Record-key). |
+| `LHCI_GITHUB_APP_TOKEN` | Lighthouse token provided on the authorization confirmation page after the installation of the [Lighthouse CI GitHub App](https://github.com/apps/lighthouse-ci). [More detais here](https://github.com/GoogleChrome/lighthouse-ci/blob/main/docs/getting-started.md#github-app-method-recommended). |
 
 ## Actions
 List of avilable actions.
