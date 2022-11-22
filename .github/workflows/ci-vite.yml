@@ -19,7 +19,7 @@ on:
         type: boolean
         default: true
       lighthouse:
-        description: Run lighthouse job
+        description: Run lighthouse job. Must pass `LHCI_GITHUB_APP_TOKEN` secret
         type: boolean
         default: false
       autofix:
