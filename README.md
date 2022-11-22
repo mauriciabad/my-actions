@@ -64,7 +64,7 @@ Runs Lighthouse CI when all tests pass.
 | `type-check` | boolean | true | Run type-check job |
 | `unit-test` | boolean | true | Run unit-test job |
 | `e2e-test` | boolean | true | Run e2e-test job |
-| `lighthouse` | boolean | true | Run lighthouse job |
+| `lighthouse` | boolean | true | Run lighthouse job. Must pass `LHCI_GITHUB_APP_TOKEN` secret |
 ##### Secrets
 | Name | Description|
 |:---|:---|
