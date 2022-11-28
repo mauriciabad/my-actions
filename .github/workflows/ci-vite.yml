@@ -109,9 +109,6 @@ jobs:
       - name: ⚙️ Setup
         uses: mauriciabad/my-actions/setup-npm@main
 
-      - name: ⚙️ Install serve
-        run: npm install -g serve
-
       - name: 🚚 Get the build
         uses: actions/download-artifact@v3
         with:
@@ -123,7 +120,7 @@ jobs:
         with:
           record: ${{ inputs.record-e2e }}
           browser: chrome
-          start: 'serve dist -l 4173'
+          start: 'npm run preview -- --port 4173'
           wait-on: 'http://localhost:4173'
           wait-on-timeout: 30
         env:
