@@ -26,15 +26,7 @@ on:
         description: Commit automatic fixes after lint
         type: boolean
         default: true
-      record-e2e:
-        description: Record e2e tests. Must pass CYPRESS_PROJECT_ID and CYPRESS_RECORD_KEY secrets
-        type: boolean
-        default: false
     secrets:
-      CYPRESS_PROJECT_ID:
-        required: false
-      CYPRESS_RECORD_KEY:
-        required: false
       LHCI_GITHUB_APP_TOKEN:
         required: false
         
@@ -109,9 +101,6 @@ jobs:
       - name: ⚙️ Setup
         uses: mauriciabad/my-actions/setup-npm@main
 
-      - name: ⚙️ Install serve
-        run: npm install -g serve
-
       - name: 🚚 Get the build
         uses: actions/download-artifact@v3
         with:
@@ -119,25 +108,15 @@ jobs:
           path: dist
 
       - name: 🤖 Run the tests
-        uses: cypress-io/github-action@v4
-        with:
-          record: ${{ inputs.record-e2e }}
-          browser: chrome
-          start: 'serve dist -l 4173'
-          wait-on: 'http://localhost:4173'
-          wait-on-timeout: 30
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-      
+        run: npm run test:e2e
+
       - name: 💾 Store the test screenshots
         uses: actions/upload-artifact@v3
         if: failure()
         with:
           name: cypress-screenshots
           path: cypress/screenshots
-          retention-days: 7
+          retention-days: 3
 
       - name: 💾 Store the test videos
         uses: actions/upload-artifact@v3
@@ -145,7 +124,7 @@ jobs:
         with:
           name: cypress-videos
           path: cypress/videos
-          retention-days: 7
+          retention-days: 3
 
   lighthouse:
     name: Lighthouse
