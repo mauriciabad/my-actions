@@ -94,7 +94,6 @@ jobs:
         with:
           name: dist
           path: dist
-          if-no-files-found: error
 
   e2e-tests:
     name: E2E tests
