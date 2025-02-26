@@ -26,10 +26,14 @@ on:
         description: Commit automatic fixes after lint
         type: boolean
         default: true
+      deploy:
+        description: Deploy to GitHub Pages
+        type: boolean
+        default: false
     secrets:
       LHCI_GITHUB_APP_TOKEN:
         required: false
-        
+
 jobs:
   lint:
     name: Lint
@@ -41,7 +45,7 @@ jobs:
 
       - name: 🔦 Lint
         run: npm run lint
-        
+
       - name: 🍾 Commit & Push changes
         if: inputs.autofix
         uses: actions-js/push@master
@@ -132,19 +136,39 @@ jobs:
     needs: [build, e2e-tests]
     runs-on: ubuntu-latest
     steps:
-    - name: ⚙️ Setup
-      uses: mauriciabad/my-actions/setup-npm@main
+      - name: ⚙️ Setup
+        uses: mauriciabad/my-actions/setup-npm@main
 
-    - name: 🚚 Get the build
-      uses: actions/download-artifact@v3
-      with:
-        name: dist
-        path: dist
+      - name: 🚚 Get the build
+        uses: actions/download-artifact@v3
+        with:
+          name: dist
+          path: dist
 
-    - name: 🎁 Install Lighthouse
-      run: npm install -g @lhci/cli
+      - name: 🎁 Install Lighthouse
+        run: npm install -g @lhci/cli
 
-    - name: 🔎 Run Lighthouse
-      run: lhci autorun
-      env:
-        LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+      - name: 🔎 Run Lighthouse
+        run: lhci autorun
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+  deploy:
+    needs: build
+    if: inputs.deploy && github.ref == 'refs/heads/main'
+
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        with:
+          artifact_name: dist
